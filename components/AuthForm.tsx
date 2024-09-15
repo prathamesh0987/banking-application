@@ -27,8 +27,10 @@ const AuthForm = ({type}:{type:string}) => {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof authFormSchema>>({
-    resolver: zodResolver(authFormSchema),
+  const formSchema=authFormSchema(type)
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password:''
@@ -36,7 +38,7 @@ const AuthForm = ({type}:{type:string}) => {
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof authFormSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setIsLoading(true)
@@ -83,6 +85,48 @@ const AuthForm = ({type}:{type:string}) => {
       <>
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {
+          type==='sign-up' && (
+            <>
+
+          <div className="flex gap-4">
+            <CustomInput 
+        control={form.control} name='firstName' label="First Name" placeholder="Enter your First Name"
+        />
+        
+        <CustomInput 
+        control={form.control} name='lastName' label="Last Name" placeholder="Enter your Last Name"
+        />
+        </div>
+
+        <CustomInput 
+        control={form.control} name='address1' label="Address" placeholder="Enter your specific address"
+        />
+
+        <div className="flex gap-4">
+        <CustomInput 
+        control={form.control} name='state' label="State" placeholder="ex: NY"
+        />
+
+        
+        <CustomInput 
+        control={form.control} name='postalcode' label="Postal Code" placeholder="ex: 11101"
+        />
+        </div>
+
+        <div className="flex gap-4">
+        <CustomInput 
+        control={form.control} name='dateOfBirth' label="Date of Birth" placeholder="YYYY-MM-DD"
+        />
+        
+
+        <CustomInput 
+        control={form.control} name='ssn' label="SSN" placeholder="ex: 1234"
+        />
+        </div>
+            </>
+          )
+        }
 
         <CustomInput 
         control={form.control} name='email' label="Email" placeholder="Enter your Email"
